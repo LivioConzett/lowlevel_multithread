@@ -7,7 +7,9 @@
 #define THREAD_POOL_SIZE 8
 #define QUEUE_SIZE 100
 
-void thread_function(threadpool_t *pool){
+void *thread_function(void *arg){
+
+    threadpool_t *pool = (threadpool_t*) arg;
 
     while(!pool->stop){
 
