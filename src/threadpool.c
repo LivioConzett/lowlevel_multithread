@@ -39,6 +39,7 @@ void* thread_function(void* threadpool) {
 
         while (pool->queued == 0 && !pool->stop) {
             pthread_cond_wait(&(pool->notify), &(pool->lock));
+            printf("got task\n");
         }
 
         if (pool->stop) {
@@ -99,8 +100,6 @@ void example_task(void *arg){
 
 void threadpool_add_task(threadpool_t *pool, void (*function)(void*), void *arg){
     pthread_mutex_lock(&(pool->lock));
-
-    printf("adding task\n");
 
     int next_rear = (pool->queue_back + 1) % QUEUE_SIZE;
     if(pool->queued < QUEUE_SIZE){
