@@ -8,7 +8,7 @@
 #define QUEUE_SIZE 100
 
 typedef struct {
-  void (*function)(void* arg);
+  void (*fn)(void* arg);
   void* arg;
 } task_t;
 
@@ -52,7 +52,7 @@ void* thread_function(void* threadpool) {
 
         pthread_mutex_unlock(&(pool->lock));
 
-        (*(task.function))(task.arg);
+        (*(task.fn))(task.arg);
     }
 
     return NULL;
@@ -100,7 +100,7 @@ void threadpool_add_task(threadpool_t *pool, void (*function)(void*), void *arg)
 
     int next_rear = (pool->queue_back + 1) % QUEUE_SIZE;
     if(pool->queued < QUEUE_SIZE){
-        pool->task_queue[pool->queue_back].function = function;
+        pool->task_queue[pool->queue_back].fn = function;
         pool->task_queue[pool->queue_back].arg = arg;
         pool->queue_back = next_rear;
         pool->queued++;
