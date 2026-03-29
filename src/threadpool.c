@@ -54,7 +54,7 @@ void *thread_function(void *arg){
 
         pthread_mutex_unlock(&(pool->lock));
 
-        (*(task.fn))(task.arg);
+        //(*(task.fn))(task.arg);
 
     }
 
@@ -87,8 +87,8 @@ void threadpool_destroy(threadpool_t *pool){
         pthread_join(pool->threads[i], NULL);
     }
 
-    //pthread_mutex_destroy(&(pool->lock));
-    //pthread_cond_destroy(&(pool->notify));
+    pthread_mutex_destroy(&(pool->lock));
+    pthread_cond_destroy(&(pool->notify));
 
 }
 
