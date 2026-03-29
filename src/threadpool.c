@@ -87,8 +87,8 @@ void threadpool_destroy(threadpool_t *pool){
         pthread_join(pool->threads[i], NULL);
     }
 
-    pthread_mutex_destroy(&(pool->lock));
-    pthread_cond_destroy(&(pool->notify));
+    //pthread_mutex_destroy(&(pool->lock));
+    //pthread_cond_destroy(&(pool->notify));
 
 }
 
@@ -96,7 +96,7 @@ void example_task(void *arg){
     int *num = (int*)arg;
     printf("Processing task %d\n", *num);
     sleep(1);
-    //free(arg);
+    free(arg);
 }
 
 void threadpool_add_task(threadpool_t *pool, void (*function)(void*), void *arg){
