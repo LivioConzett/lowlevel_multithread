@@ -15,11 +15,9 @@ void thread_function(threadpool_t *pool){
 
         pthread_cond_wait(&(pool->notify), &(pool->lock));
 
-
-
     }
-
 }
+
 
 void threadpool_init(threadpool_t *pool){
     pool->queued = 0;
