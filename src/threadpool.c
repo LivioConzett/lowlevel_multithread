@@ -4,8 +4,8 @@
 #include <unistd.h>
 //#include <threadpool.h>
 
-#define THREADS 16
-#define QUEUE_SIZE 100
+#define THREADS 20
+#define QUEUE_SIZE 20
 
 typedef struct {
   void (*fn)(void* arg);
@@ -54,7 +54,7 @@ void *thread_function(void *arg){
 
         pthread_mutex_unlock(&(pool->lock));
 
-        //(*(task.fn))(task.arg);
+        (*(task.fn))(task.arg);
 
     }
 
