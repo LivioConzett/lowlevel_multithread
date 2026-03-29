@@ -4,8 +4,6 @@
 #include <unistd.h>
 #include <threadpool.h>
 
-#define THREAD_POOL_SIZE 8
-#define QUEUE_SIZE 100
 
 void *thread_function(void *arg){
 
@@ -47,7 +45,7 @@ void threadpool_init(threadpool_t *pool){
     pthread_mutex_init(&(pool->lock), NULL);
     pthread_cond_init(&(pool->notify), NULL);
 
-    for(int i = 0; i < THREAD_POOL_SIZE; i++){
+    for(int i = 0; i < THREADS; i++){
         pthread_create(&(pool->threads[i]), NULL, thread_function, pool);
     }
 }
@@ -59,7 +57,7 @@ void threadpool_destroy(threadpool_t *pool){
     pthread_cond_broadcast(&(pool->notify));
     pthread_mutex_unlock(&(pool->lock));
 
-    for(int i = 0; i < THREAD_POOL_SIZE; i++){
+    for(int i = 0; i < THREADS; i++){
         pthread_join(pool->threads[i], NULL);
     }
 
