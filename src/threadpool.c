@@ -23,6 +23,12 @@ typedef struct {
   int stop;
 } threadpool_t;
 
+void threadpool_init(threadpool_t* pool);
+void threadpool_destroy(threadpool_t* pool);
+void threadpool_add_task(threadpool_t* pool, void (*function)(void*), void* arg);
+void example_task(void* arg);
+
+
 void *thread_function(void *arg){
 
     threadpool_t *pool = (threadpool_t*) arg;
