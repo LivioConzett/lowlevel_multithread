@@ -33,13 +33,13 @@ void example_task(void* arg);
 
 void* thread_function(void* threadpool) {
     threadpool_t* pool = (threadpool_t*)threadpool;
-
+    printf("starting thread\n");
+    
     while (1) {
         pthread_mutex_lock(&(pool->lock));
 
         while (pool->queued == 0 && !pool->stop) {
             pthread_cond_wait(&(pool->notify), &(pool->lock));
-            printf("got task\n");
         }
 
         if (pool->stop) {
