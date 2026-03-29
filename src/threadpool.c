@@ -5,7 +5,7 @@
 //#include <threadpool.h>
 
 #define THREADS 20
-#define QUEUE_SIZE 20
+#define QUEUE_SIZE 300
 
 typedef struct {
   void (*fn)(void* arg);
