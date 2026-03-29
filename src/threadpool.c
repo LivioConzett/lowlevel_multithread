@@ -52,7 +52,7 @@ void* thread_function(void* threadpool) {
 
         pthread_mutex_unlock(&(pool->lock));
         
-        printf("%d\n", task.arg);
+
 
         (*(task.fn))(task.arg);
     }
@@ -99,6 +99,8 @@ void example_task(void *arg){
 
 void threadpool_add_task(threadpool_t *pool, void (*function)(void*), void *arg){
     pthread_mutex_lock(&(pool->lock));
+
+    printf("adding task\n");
 
     int next_rear = (pool->queue_back + 1) % QUEUE_SIZE;
     if(pool->queued < QUEUE_SIZE){
