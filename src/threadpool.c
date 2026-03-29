@@ -4,8 +4,8 @@
 #include <unistd.h>
 //#include <threadpool.h>
 
-#define THREADS 30
-#define QUEUE_SIZE 200
+#define THREADS 16
+#define QUEUE_SIZE 100
 
 typedef struct {
   void (*fn)(void* arg);
