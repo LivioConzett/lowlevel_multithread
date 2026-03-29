@@ -2,31 +2,55 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-//#include <threadpool.h>
+#include <threadpool.h>
 
-#define THREADS 16
-#define QUEUE_SIZE 100
+// #define THREADS 16
+// #define QUEUE_SIZE 100
 
-typedef struct {
-  void (*fn)(void* arg);
-  void* arg;
-} task_t;
+// typedef struct {
+//   void (*fn)(void* arg);
+//   void* arg;
+// } task_t;
 
-typedef struct {
-  pthread_mutex_t lock;
-  pthread_cond_t notify;
-  pthread_t threads[THREADS];
-  task_t task_queue[QUEUE_SIZE];
-  int queued;
-  int queue_front;
-  int queue_back;
-  int stop;
-} threadpool_t;
+// typedef struct {
+//   pthread_mutex_t lock;
+//   pthread_cond_t notify;
+//   pthread_t threads[THREADS];
+//   task_t task_queue[QUEUE_SIZE];
+//   int queued;
+//   int queue_front;
+//   int queue_back;
+//   int stop;
+// } threadpool_t;
 
-void threadpool_init(threadpool_t* pool);
-void threadpool_destroy(threadpool_t* pool);
-void threadpool_add_task(threadpool_t* pool, void (*function)(void*), void* arg);
-void example_task(void* arg);
+// void threadpool_init(threadpool_t* pool);
+// void threadpool_destroy(threadpool_t* pool);
+// void threadpool_add_task(threadpool_t* pool, void (*function)(void*), void* arg);
+// void example_task(void* arg);
+
+void example_task(void *arg){
+    int *num = (int*)arg;
+    printf("Processing task %d\n", *num);
+    sleep(1);
+    free(arg);
+}
+
+void threadpool_add_task(threadpool_t *pool, void (*function)(void*), void *arg){
+    pthread_mutex_lock(&(pool->lock));
+
+    int next_rear = (pool->queue_back + 1) % QUEUE_SIZE;
+    if(pool->queued < QUEUE_SIZE){
+        pool->task_queue[pool->queue_back].fn = function;
+        pool->task_queue[pool->queue_back].arg = arg;
+        pool->queue_back = next_rear;
+        pool->queued++;
+        pthread_cond_signal(&(pool->notify));
+    } else {
+        printf("Task queue is full! Cannot add more tasks.\n");
+    }
+
+    pthread_mutex_unlock(&(pool->lock));
+}
 
 
 void *thread_function(void *arg){
