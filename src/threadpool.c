@@ -51,6 +51,8 @@ void* thread_function(void* threadpool) {
         pool->queued--;
 
         pthread_mutex_unlock(&(pool->lock));
+        
+        printf("%d\n", task.arg);
 
         (*(task.fn))(task.arg);
     }
