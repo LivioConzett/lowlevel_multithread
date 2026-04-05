@@ -2,39 +2,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-//#include <threadpool.h>
+#include <threadpool.h>
 
-#ifndef THREADPOOL_H
-#define THREADPOOL_H
+// #ifndef THREADPOOL_H
+// #define THREADPOOL_H
 
-#include <pthread.h>
+// #include <pthread.h>
 
-#define THREADS 16
-#define QUEUE_SIZE 100
+// #define THREADS 16
+// #define QUEUE_SIZE 100
 
-typedef struct {
-  void (*fn)(void* arg);
-  void* arg;
-} task_t;
+// typedef struct {
+//   void (*fn)(void* arg);
+//   void* arg;
+// } task_t;
 
-typedef struct {
-  pthread_mutex_t lock;
-  pthread_cond_t notify;
-  pthread_t threads[THREADS];
-  task_t *task_queue;
-  int queued;
-  int queue_front;
-  int queue_back;
-  int stop;
-} threadpool_t;
+// typedef struct {
+//   pthread_mutex_t lock;
+//   pthread_cond_t notify;
+//   pthread_t threads[THREADS];
+//   task_t *task_queue;
+//   int queued;
+//   int queue_front;
+//   int queue_back;
+//   int stop;
+// } threadpool_t;
 
-// Function declarations
-void threadpool_init(threadpool_t* pool);
-void threadpool_destroy(threadpool_t* pool);
-void threadpool_add_task(threadpool_t* pool, void (*function)(void*), void* arg);
-void example_task(void* arg);
+// // Function declarations
+// void threadpool_init(threadpool_t* pool);
+// void threadpool_destroy(threadpool_t* pool);
+// void threadpool_add_task(threadpool_t* pool, void (*function)(void*), void* arg);
+// void example_task(void* arg);
 
-#endif // THREADPOOL_H 
+// #endif // THREADPOOL_H 
 
 
 
@@ -77,8 +77,6 @@ void threadpool_init(threadpool_t *pool){
     pthread_mutex_init(&(pool->lock), NULL);
     pthread_cond_init(&(pool->notify), NULL);
 
-    pool->task_queue = (task_t *)malloc(10 * sizeof(task_t));
-
     for(int i = 0; i < THREADS; i++){
         pthread_create(&(pool->threads[i]), NULL, thread_function, pool);
     }
@@ -90,8 +88,9 @@ void threadpool_destroy(threadpool_t* pool) {
     pool->stop = 1;
     pthread_cond_broadcast(&(pool->notify));
     pthread_mutex_unlock(&(pool->lock));
-
+    
     for (int i = 0; i < THREADS; i++) {
+        printf("joining thread %d\n", i);
         pthread_join(pool->threads[i], NULL);
     }
 
@@ -102,7 +101,7 @@ void threadpool_destroy(threadpool_t* pool) {
 void example_task(void *arg){
     int *num = (int*)arg;
     printf("Processing task %d\n", *num);
-    sleep(.5);
+    sleep(1);
     free(arg);
 }
 
