@@ -2,15 +2,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <threadpool.h>
+//#include <threadpool.h>
 
 #ifndef THREADPOOL_H
 #define THREADPOOL_H
 
 #include <pthread.h>
 
-#define THREADS 16
-#define QUEUE_SIZE 100
+#define THREADS 3
+#define QUEUE_SIZE 10
 
 typedef struct {
   void (*fn)(void* arg);
@@ -21,7 +21,7 @@ typedef struct {
   pthread_mutex_t lock;
   pthread_cond_t notify;
   pthread_t threads[THREADS];
-  task_t task_queue[QUEUE_SIZE];
+  task_t *task_queue;
   int queued;
   int queue_front;
   int queue_back;
@@ -61,8 +61,6 @@ void* thread_function(void* threadpool) {
 
         pthread_mutex_unlock(&(pool->lock));
         
-
-
         (*(task.fn))(task.arg);
     }
 
@@ -78,6 +76,8 @@ void threadpool_init(threadpool_t *pool){
 
     pthread_mutex_init(&(pool->lock), NULL);
     pthread_cond_init(&(pool->notify), NULL);
+
+    pool->task_queue = (task_t *)malloc(10 * sizeof(task_t));
 
     for(int i = 0; i < THREADS; i++){
         pthread_create(&(pool->threads[i]), NULL, thread_function, pool);
