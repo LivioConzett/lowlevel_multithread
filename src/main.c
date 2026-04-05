@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include <threadpool.h>
+#include "threadpool.c"
 
 int main(int argc, char *argv[]){
 

@@ -2,15 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-// #include <threadpool.h>
 
-#ifndef THREADPOOL_H
-#define THREADPOOL_H
+// #ifndef THREADPOOL_H
+// #define THREADPOOL_H
 
 #include <pthread.h>
 
 #define THREADS 16
-#define QUEUE_SIZE 100
+#define QUEUE_SIZE 101
 
 typedef struct {
   void (*fn)(void* arg);
@@ -34,7 +33,7 @@ void threadpool_destroy(threadpool_t* pool);
 void threadpool_add_task(threadpool_t* pool, void (*function)(void*), void* arg);
 void example_task(void* arg);
 
-#endif // THREADPOOL_H 
+//#endif // THREADPOOL_H 
 
 
 
