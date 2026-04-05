@@ -9,8 +9,8 @@
 
 #include <pthread.h>
 
-#define THREADS 3
-#define QUEUE_SIZE 10
+#define THREADS 16
+#define QUEUE_SIZE 100
 
 typedef struct {
   void (*fn)(void* arg);
