@@ -102,7 +102,7 @@ void threadpool_destroy(threadpool_t* pool) {
 void example_task(void *arg){
     int *num = (int*)arg;
     printf("Processing task %d\n", *num);
-    sleep(1);
+    sleep(.5);
     free(arg);
 }
 
